@@ -1,41 +1,32 @@
-from flask import Flask, send_from_directory, redirect
+from flask import Flask, render_template
 
-app = Flask(__name__, static_folder='.')
+app = Flask(__name__)
+application = app  # Required for AWS compatibility
 
-# Redirect root to 'register.html'
 @app.route('/')
-def root():
-    return redirect('/register.html', code=302)
+def home():
+    return render_template('index.html')
 
-# Serve 'register.html'
 @app.route('/register.html')
 def register():
-    return send_from_directory(app.static_folder, 'register.html')
+    return render_template('register.html')
 
-# Serve 'dashboard.html'
 @app.route('/dashboard.html')
 def dashboard():
-    return send_from_directory(app.static_folder, 'dashboard.html')
+    return render_template('dashboard.html')
 
-# Serve 'quiz.html'
 @app.route('/quiz.html')
 def quiz():
-    return send_from_directory(app.static_folder, 'quiz.html')
+    return render_template('quiz.html')
 
-# Serve 'flash.html'
 @app.route('/flash.html')
-def flash():
-    return send_from_directory(app.static_folder, 'flash.html')
+def flashcards():
+    return render_template('flash.html')
 
-# Serve 'ai_chat.html'
 @app.route('/ai_chat.html')
 def ai_chat():
-    return send_from_directory(app.static_folder, 'ai_chat.html')
+    return render_template('ai_chat.html')
 
-@app.route('/navbar.css')
-def navbar():
-    return send_from_directory(app.static_folder, 'navbar.css')
-
-# Commenting app.run() for AWS Amplify
-# if __name__ == '__main__':
-#     app.run(host='0.0.0.0', port=8000, debug=True)
+# Removing the app.run() call
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
