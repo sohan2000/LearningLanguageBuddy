@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat for Learning English</title>
+    
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="flash.html">Flashcards</a>
+        <a href="ai_chat.html">Practice with AI</a>
+        <a href="#" id="logoutButton" style="float: right;">Logout</a>
+    </div>
+    <div class="content">
+        <h1>AI English Learning Chat</h1>
+        <div id="chatContainer" class="chat-container"></div>
+        <div id="inputContainer">
+            <input id="messageInput" type="text" placeholder="Type your message..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+
+        function sendMessage() {
+            const userMessage = messageInput.value.trim();
+            if (!userMessage) return;
+
+            // Display the user's message in the chat
+            appendMessage(userMessage, 'user-message');
+
+            // Clear the input field
+            messageInput.value = '';
+
+            // Send the user's message to OpenRouter API
+            fetch('http://ec2-54-193-85-32.us-west-1.compute.amazonaws.com:5000/chat_ai', { // Local endpoint to interact with OpenRouter
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Display the AI's response in the chat
+                    appendMessage(data.response, 'ai-message');
+                })
+                .catch(error => {
+                    console.error('Error communicating with AI:', error);
+                    appendMessage('Sorry, I couldn\'t understand that. Please try again.', 'ai-message');
+                });
+        }
+
+        function appendMessage(message, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${className}`;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            fetch('http://ec2-54-193-85-32.us-west-1.compute.amazonaws.com:5000/logout', {
+                method: 'POST', // Assuming logout is a POST request
+                credentials: 'include' // Needed to handle sessions if cookies are used
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Assuming the backend sends some sort of confirmation the session was cleared
+                console.log('Logout successful:', data.message);
+                window.location.href = 'register.html'; // Redirect to the registration page
+            })
+            .catch(error => {
+                console.error('Logout failed:', error);
+            });
+        });
+    </script>
+</body>
+</html>

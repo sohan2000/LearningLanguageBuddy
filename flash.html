@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Viewer</title>
+    
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="flash.html">Flashcards</a>
+        <a href="ai_chat.html">Practice with AI</a>
+        <a href="#" id="logoutButton" style="float: right;">Logout</a>
+    </div>
+    <div class="content">
+    <h1>Learn with Flashcards</h1>
+    <div id="flashcardContainer" class="flashcard" onclick="toggleMeaning()">
+        Click to see meaning
+    </div>
+    <button id="nextButton" onclick="nextFlashcard()">Next Flashcard</button>
+    </div>
+    <script>
+        let flashcards = [];
+        let currentFlashcardIndex = 0;
+        let currentScore = 0;
+        function loadFlashcards() {
+            fetch('http://ec2-54-193-85-32.us-west-1.compute.amazonaws.com:5000/get_flashcards', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ score: currentScore })}) // Update this URL to your Flask server's URL
+            .then(response => response.json())
+            .then(data => {
+                flashcards = data.flashcards;
+                if (flashcards.length > 0) {
+                    displayFlashcard(flashcards[currentFlashcardIndex]);
+                } else {
+                    document.getElementById('flashcardContainer').textContent = "No flashcards available";
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching flashcards:', error);
+                document.getElementById('flashcardContainer').textContent = "Error loading flashcards.";
+            });
+        }
+
+        function displayFlashcard(flashcard) {
+            const container = document.getElementById('flashcardContainer');
+            container.textContent = flashcard.Word;  // Display the word
+            container.dataset.meaning = flashcard.Meaning;  // Store the meaning to toggle later
+        }
+
+        function toggleMeaning() {
+            const container = document.getElementById('flashcardContainer');
+            if (container.textContent === container.dataset.meaning) {
+                container.textContent = flashcards[currentFlashcardIndex].Word;  // Toggle back to the word
+            } else {
+                container.textContent = container.dataset.meaning;  // Show the meaning
+            }
+        }
+
+        function nextFlashcard() {
+            currentFlashcardIndex++;
+            if (currentFlashcardIndex < flashcards.length) {
+                displayFlashcard(flashcards[currentFlashcardIndex]);
+            } else {
+                document.getElementById('flashcardContainer').textContent = "You've reached the end of the flashcards!";
+                document.getElementById('nextButton').style.display = 'none'; // Hide next button
+            }
+        }
+        document.getElementById('logoutButton').addEventListener('click', function() {
+            fetch('http://ec2-54-193-85-32.us-west-1.compute.amazonaws.com:5000/logout', {
+                method: 'POST', // Assuming logout is a POST request
+                credentials: 'include' // Needed to handle sessions if cookies are used
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Assuming the backend sends some sort of confirmation the session was cleared
+                console.log('Logout successful:', data.message);
+                window.location.href = 'register.html'; // Redirect to the registration page
+            })
+            .catch(error => {
+                console.error('Logout failed:', error);
+            });
+        });
+        window.onload = loadFlashcards;
+    </script>
+</body>
+</html>
