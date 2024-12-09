@@ -36,5 +36,6 @@ def ai_chat():
 def navbar():
     return send_from_directory(app.static_folder, 'navbar.css')
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+# Commenting app.run() for AWS Amplify
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=8000, debug=True)
