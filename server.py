@@ -1,31 +1,41 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory, redirect
 
 app = Flask(__name__)
 application = app  # Required for AWS compatibility
 
+# Redirect root to 'register.html'
 @app.route('/')
-def home():
-    return render_template('index.html')
+def root():
+    return redirect('/register.html', code=302)
 
+# Serve 'register.html'
 @app.route('/register.html')
 def register():
-    return render_template('register.html')
+    return send_from_directory(app.static_folder, 'register.html')
 
+# Serve 'dashboard.html'
 @app.route('/dashboard.html')
 def dashboard():
-    return render_template('dashboard.html')
+    return send_from_directory(app.static_folder, 'dashboard.html')
 
+# Serve 'quiz.html'
 @app.route('/quiz.html')
 def quiz():
-    return render_template('quiz.html')
+    return send_from_directory(app.static_folder, 'quiz.html')
 
+# Serve 'flash.html'
 @app.route('/flash.html')
-def flashcards():
-    return render_template('flash.html')
+def flash():
+    return send_from_directory(app.static_folder, 'flash.html')
 
+# Serve 'ai_chat.html'
 @app.route('/ai_chat.html')
 def ai_chat():
-    return render_template('ai_chat.html')
+    return send_from_directory(app.static_folder, 'ai_chat.html')
+
+@app.route('/navbar.css')
+def navbar():
+    return send_from_directory(app.static_folder, 'navbar.css')
 
 # Removing the app.run() call
 if __name__ == '__main__':
