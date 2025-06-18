@@ -12,11 +12,11 @@ from openai import OpenAI
 
 load_dotenv()
 
-OPENROUTER_API_KEY = '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'  # Replace with your OpenRouter API key
+OPENROUTER_API_KEY = 'open-ai-api-key'  # Replace with your OpenRouter API key
 OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/completions'
 
-ACCESS_KEY = 'AKIAVRUVPKRZBBVC6H6C'
-SECRET = 'fxf2Z/TJ6rG5HjaAPzfYnmoh+QPaxo3Iabha9HrE'
+ACCESS_KEY = 'aws-access-key'
+SECRET = 'aws-secret-key'
 
 CLIENT_SECRET = "1tvr420trmngmi1mqenqhq80hume25h5lqr4a1r258ih3rvt3pgb"
 
