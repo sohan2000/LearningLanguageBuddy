@@ -2,7 +2,7 @@
 
 **LearningLanguageBuddy** is an interactive language learning platform designed to help users build vocabulary, track progress, and practice real-world conversation using AI-powered tools.
 
-[ProjectPresentation.pdf](https://github.com/user-attachments/files/20804825/ProjectPresentation.pdf)
+Project Presentation: [link](https://github.com/sohan2000/LearningLanguageBuddy/blob/main/ProjectPresentation.pdf)
 ---
 
 **Features**
